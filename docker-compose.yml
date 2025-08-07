@@ -11,7 +11,7 @@ services:
     depends_on:
       - api1
       - api2
-      - api2
+      - api3
   api1:
     build: ./api
     container_name: api1
