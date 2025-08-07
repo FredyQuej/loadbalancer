@@ -18,6 +18,11 @@ app.get('/', async (req, res) => {
   }
 });
 
+// Endpoint para healthcheck
+app.get('/health', (req, res) => {
+  res.status(200).send('OK');
+});
+
 app.listen(port, () => {
   console.log(`Servidor escuchando en el puerto ${port}`);
 });
