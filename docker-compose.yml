@@ -1,21 +1,30 @@
-version: '3.8'
-
 services:
   apache:
-    build: ./apache
+    image: httpd:2.4
     container_name: apache-lb
     ports:
       - "80:80"
+    volumes:
+      - ./apache/apache.conf:/usr/local/apache2/conf/httpd.conf
     depends_on:
-      - api1
-      - api2
-      - api3
+      api1:
+        condition: service_healthy
+      api2:
+        condition: service_healthy
+      api3:
+        condition: service_healthy
+
   api1:
     build: ./api
     container_name: api1
     environment:
       - PORT=3000
       - DATABASE_URL=${DATABASE_URL}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   api2:
     build: ./api
@@ -23,9 +32,20 @@ services:
     environment:
       - PORT=3000
       - DATABASE_URL=${DATABASE_URL}
-  api3:               
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api3:
     build: ./api
     container_name: api3
     environment:
       - PORT=3000
       - DATABASE_URL=${DATABASE_URL}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
