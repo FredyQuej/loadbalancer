@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  apache:
+    image: httpd:2.4
+    container_name: apache-lb
+    ports:
+      - "80:80"
+    volumes:
+      - ./apache/apache.conf:/usr/local/apache2/conf/httpd.conf
+    depends_on:
+      - api1
+      - api2
+      - api2
+  api1:
+    build: ./api
+    container_name: api1
+    environment:
+      - PORT=3000
+      - DATABASE_URL=${DATABASE_URL}
+
+  api2:
+    build: ./api
+    container_name: api2
+    environment:
+      - PORT=3000
+      - DATABASE_URL=${DATABASE_URL}
+  api3:               
+    build: ./api
+    container_name: api3
+    environment:
+      - PORT=3000
+      - DATABASE_URL=${DATABASE_URL}
